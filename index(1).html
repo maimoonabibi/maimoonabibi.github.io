@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maimoona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Caveat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3E3CE;
+    --bg-deep:#EAD3B3;
+    --ink:#2B1810;
+    --maroon:#7A2E22;
+    --terracotta:#C1502E;
+    --peach:#E8A854;
+    --tan:#D4A373;
+    --cream:#FBF3E7;
+    --hand: 'Caveat', cursive;
+    --display: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    position:relative;
+  }
+  ::selection{background:var(--terracotta); color:var(--cream);}
+
+  .paper-texture{
+    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.4; mix-blend-mode:multiply;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(122,46,34,0.05) 0, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(193,80,46,0.06) 0, transparent 45%);
+  }
+
+  .wrap{max-width:920px; margin:0 auto; padding:0 30px; position:relative;}
+
+  a{color:inherit; text-decoration:none;}
+
+  /* ---------------- NAV ---------------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 30px;
+    mix-blend-mode:normal;
+  }
+  .nav-mark{
+    font-family:var(--hand); font-size:28px; color:var(--maroon); transform:rotate(-3deg); display:inline-block;
+  }
+  .nav-links{display:flex; gap:24px;}
+  .nav-links a{
+    font-size:13px; font-weight:600; color:var(--ink); position:relative; padding-bottom:2px;
+    text-transform:lowercase;
+  }
+  .nav-links a svg{position:absolute; left:0; bottom:-6px; width:100%; height:6px; opacity:0; transition:opacity .3s;}
+  .nav-links a:hover svg{opacity:1;}
+
+  /* ---------------- HERO ---------------- */
+  header{
+    min-height:100vh; position:relative; display:flex; align-items:center;
+    padding-top:60px; z-index:2;
+  }
+  .hero-inner{position:relative; width:100%;}
+
+  .blob-1{position:absolute; top:-60px; right:-40px; width:340px; height:340px; z-index:-1; opacity:0.9;}
+  .blob-2{position:absolute; bottom:-120px; left:-80px; width:260px; height:260px; z-index:-1; opacity:0.55;}
+
+  .hero-tag{
+    font-family:var(--hand); font-size:22px; color:var(--maroon); transform:rotate(-2deg);
+    display:inline-block; margin-bottom:6px;
+  }
+  h1.name{
+    font-family:var(--display); font-weight:700; font-style:normal;
+    font-size:clamp(58px, 11vw, 118px);
+    line-height:0.92; letter-spacing:-0.01em; color:var(--ink);
+    position:relative;
+  }
+  h1.name .scribble-under{position:relative; display:inline-block;}
+  h1.name .scribble-under svg{position:absolute; left:0; bottom:-6px; width:100%; height:18px;}
+
+  .hero-role{
+    font-family:var(--display); font-style:italic; font-weight:500;
+    font-size:clamp(20px, 3vw, 28px); color:var(--terracotta); margin-top:18px; max-width:560px;
+  }
+
+  .hero-badges{
+    display:flex; gap:14px; margin-top:38px; flex-wrap:wrap;
+  }
+  .badge{
+    background:var(--cream); border:1.5px solid var(--ink); border-radius:40px;
+    padding:8px 18px; font-size:13px; font-weight:600;
+    transform:rotate(-1.5deg);
+    box-shadow:3px 3px 0 var(--maroon);
+  }
+  .badge:nth-child(2){transform:rotate(1.5deg); box-shadow:3px 3px 0 var(--terracotta);}
+  .badge:nth-child(3){transform:rotate(-1deg); box-shadow:3px 3px 0 var(--peach);}
+
+  .scroll-hint{
+    position:absolute; bottom:30px; right:30px; font-family:var(--hand); font-size:20px; color:var(--maroon);
+    transform:rotate(4deg);
+  }
+  .scroll-hint svg{display:block; margin:4px auto 0; animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+  /* ---------------- SECTION LABELS ---------------- */
+  section{position:relative; z-index:2; padding:100px 0 10px; scroll-margin-top:90px;}
+  .label{
+    display:inline-flex; align-items:center; gap:10px; margin-bottom:50px;
+  }
+  .label-badge{
+    font-family:var(--display); font-weight:700; font-size:15px;
+    background:var(--maroon); color:var(--cream); padding:8px 16px 8px 14px;
+    border-radius:0 16px 16px 16px; transform:rotate(-1deg);
+  }
+  .label-line{font-family:var(--hand); font-size:26px; color:var(--ink); transform:rotate(-1deg);}
+
+  /* ---------------- ABOUT: torn collage ---------------- */
+  .about-scene{position:relative; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center;}
+  @media(max-width:720px){.about-scene{grid-template-columns:1fr;}}
+  .about-card{
+    background:var(--cream); border-radius:18px; padding:30px 28px;
+    transform:rotate(-1.5deg); box-shadow:6px 6px 0 var(--tan);
+    position:relative;
+  }
+  .about-card p{font-size:15.5px; line-height:1.65; color:var(--ink);}
+  .about-card strong{color:var(--maroon);}
+  .pin{
+    position:absolute; top:-14px; left:24px; width:26px; height:26px; border-radius:50%;
+    background:var(--terracotta); box-shadow:0 3px 6px rgba(0,0,0,0.25);
+  }
+  .facts-cluster{display:flex; flex-direction:column; gap:16px;}
+  .fact-chip{
+    background:var(--bg-deep); border:1.5px dashed var(--maroon); border-radius:12px;
+    padding:14px 18px; font-size:14px; transform:rotate(1deg);
+  }
+  .fact-chip:nth-child(even){transform:rotate(-1.2deg);}
+  .fact-chip b{display:block; font-family:var(--display); font-size:16px; color:var(--maroon); margin-bottom:2px;}
+
+  /* ---------------- WORK: scattered visual tiles ---------------- */
+  .work-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:28px;
+  }
+  @media(max-width:720px){.work-grid{grid-template-columns:1fr;}}
+  .tile{
+    background:var(--cream); border-radius:22px; padding:26px; position:relative; overflow:hidden;
+    box-shadow:5px 5px 0 rgba(43,24,16,0.15);
+    transition:transform .3s ease, box-shadow .3s ease;
+    display:block; color:var(--ink);
+  }
+  .tile-more{
+    display:inline-block; margin-top:16px; font-family:var(--hand); font-size:17px; color:var(--maroon);
+  }
+  .tile:nth-child(1){transform:rotate(-1deg);}
+  .tile:nth-child(2){transform:rotate(1.2deg); margin-top:26px;}
+  .tile:nth-child(3){transform:rotate(0.8deg); margin-top:-10px;}
+  .tile:nth-child(4){transform:rotate(-1.4deg);}
+  .tile:hover{transform:rotate(0deg) translateY(-4px); box-shadow:7px 9px 0 rgba(43,24,16,0.2);}
+
+  .tile-blob{position:absolute; top:-30px; right:-30px; width:120px; height:120px; opacity:0.5; z-index:0;}
+  .tile-content{position:relative; z-index:1;}
+  .tile-index{font-family:var(--hand); font-size:34px; color:var(--terracotta); line-height:1;}
+  .tile-title{font-family:var(--display); font-weight:700; font-size:21px; margin-top:6px; color:var(--ink);}
+  .tile-desc{font-size:14px; color:#5A4636; margin-top:10px; line-height:1.55;}
+  .tile-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px;}
+  .tile-tags span{
+    font-size:11px; font-weight:600; background:var(--bg-deep); padding:4px 10px; border-radius:20px; color:var(--maroon);
+  }
+
+  /* ---------------- LEADERSHIP: weighted card grid ---------------- */
+  .lead-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  @media(max-width:720px){.lead-grid{grid-template-columns:1fr;}}
+  .lead-card{
+    background:var(--maroon); color:var(--cream); border-radius:18px; padding:26px 24px;
+    box-shadow:5px 5px 0 var(--tan);
+  }
+  .lead-card:nth-child(1){transform:rotate(-0.6deg);}
+  .lead-card:nth-child(2){transform:rotate(0.8deg);}
+  .lead-card:nth-child(3){transform:rotate(-0.4deg);}
+  .lead-card:nth-child(4){transform:rotate(0.5deg);}
+  .lead-card:nth-child(5){transform:rotate(-0.7deg);}
+  .lead-role{font-family:var(--display); font-weight:700; font-size:19px;}
+  .lead-org{font-family:var(--hand); font-size:19px; color:var(--peach); margin-top:3px;}
+  .lead-desc{font-size:13.5px; color:#F0DAC4; margin-top:10px; line-height:1.55;}
+
+  /* ---------------- CONTACT ---------------- */
+  footer{padding:110px 0 70px; position:relative; z-index:2; text-align:center;}
+  .contact-title{
+    font-family:var(--display); font-weight:700; font-size:clamp(34px,7vw,64px); line-height:1;
+  }
+  .contact-title .scribble-under svg{height:20px;}
+  .contact-sub{font-family:var(--hand); font-size:22px; color:var(--maroon); margin-top:16px; transform:rotate(-1deg); display:inline-block;}
+  .contact-links{display:flex; justify-content:center; gap:16px; margin-top:34px; flex-wrap:wrap;}
+  .contact-links a{
+    background:var(--cream); border:2px solid var(--ink); border-radius:40px; padding:10px 22px;
+    font-weight:600; font-size:13px; box-shadow:4px 4px 0 var(--terracotta);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .contact-links a:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--terracotta);}
+  .foot-note{margin-top:60px; font-family:var(--hand); font-size:16px; color:#8A6F55;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="paper-texture"></div>
+
+<nav>
+  <span class="nav-mark">maimoona.</span>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#work">work</a>
+    <a href="#leadership">leadership</a>
+  </div>
+</nav>
+
+<header class="wrap">
+  <div class="hero-inner">
+    <svg class="blob-1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#C1502E" d="M45.5,-58.5C58.3,-49.9,67.6,-34.8,71.4,-18.4C75.1,-2.1,73.2,15.5,65.2,29.4C57.2,43.3,43,53.5,27.4,60.8C11.7,68.1,-5.5,72.5,-21.3,68.7C-37.1,64.9,-51.6,52.9,-60.6,37.7C-69.6,22.5,-73.1,4.1,-69.9,-12.7C-66.7,-29.5,-56.8,-44.7,-43.2,-53.4C-29.7,-62.1,-14.8,-64.3,1.6,-66.4C18.1,-68.5,32.7,-67.1,45.5,-58.5Z" transform="translate(100 100)" opacity="0.85"/>
+    </svg>
+    <svg class="blob-2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#E8A854" d="M39.5,-51.6C51.5,-44.1,61.6,-32.3,66.1,-18.3C70.6,-4.3,69.5,12,62.6,25.3C55.7,38.6,43,48.9,29,55.6C15,62.3,-0.3,65.4,-15.5,62.5C-30.7,59.6,-45.8,50.7,-55.3,37.6C-64.8,24.5,-68.7,7.2,-65.8,-8.5C-62.9,-24.2,-53.2,-38.3,-40.6,-45.8C-28,-53.3,-14,-54.2,-0.2,-53.9C13.6,-53.6,27.5,-59.1,39.5,-51.6Z" transform="translate(100 100)"/>
+    </svg>
+
+    <div class="hero-tag">hey, i'm</div>
+    <h1 class="name"><span class="scribble-under">Maimoona
+      <svg viewBox="0 0 300 20" preserveAspectRatio="none"><path d="M2,12 Q40,2 80,12 T160,10 T240,14 T298,8" stroke="#C1502E" stroke-width="6" fill="none" stroke-linecap="round"/></svg>
+    </span></h1>
+    <p class="hero-role">Computer science student focused on cybersecurity and AI automation — and on getting more women into tech.</p>
+
+    <div class="hero-badges">
+      <span class="badge">CEH certified</span>
+      <span class="badge">BSCS · RWU</span>
+      <span class="badge">Self-taught developer</span>
+      <span class="badge">Women in Tech Advocate</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">look down
+    <svg width="20" height="26" viewBox="0 0 20 26"><path d="M10,0 V22 M2,15 L10,23 L18,15" stroke="#7A2E22" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="about">
+    <div class="label"><span class="label-badge">01</span><span class="label-line">the short version</span></div>
+    <div class="about-scene">
+      <div class="about-card">
+        <div class="pin"></div>
+        <p>I taught myself to build with <strong>WordPress and HTML/CSS</strong>, two years before I had a
+        name for what I was doing. Today my work sits between <strong>cybersecurity research</strong> and
+        <strong>AI automation</strong> — alongside leadership roles across several student organizations,
+        several of them focused specifically on getting more women into tech, AI, and study-abroad
+        opportunities they might not otherwise hear about.</p>
+      </div>
+      <div class="facts-cluster">
+        <div class="fact-chip"><b>Focus</b>Cybersecurity + AI Automation</div>
+        <div class="fact-chip"><b>Right now</b>Restarting a cybersecurity research topic with my supervisor, after retiring an earlier direction that wasn't holding up</div>
+        <div class="fact-chip"><b>Goal</b>Fully-funded master's abroad, 2028</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="label"><span class="label-badge">02</span><span class="label-line">things i've built</span></div>
+    <div class="work-grid">
+
+      <a class="tile" href="projects/email-responder.html">
+        <svg class="tile-blob" viewBox="0 0 200 200"><path fill="#D4A373" d="M45.5,-58.5C58.3,-49.9,67.6,-34.8,71.4,-18.4C75.1,-2.1,73.2,15.5,65.2,29.4C57.2,43.3,43,53.5,27.4,60.8C11.7,68.1,-5.5,72.5,-21.3,68.7C-37.1,64.9,-51.6,52.9,-60.6,37.7C-69.6,22.5,-73.1,4.1,-69.9,-12.7C-66.7,-29.5,-56.8,-44.7,-43.2,-53.4C-29.7,-62.1,-14.8,-64.3,1.6,-66.4C18.1,-68.5,32.7,-67.1,45.5,-58.5Z" transform="translate(100 100)"/></svg>
+        <div class="tile-content">
+          <div class="tile-index">01</div>
+          <div class="tile-title">AI Email Responder</div>
+          <p class="tile-desc">My flagship automation build — an autonomous email responder on n8n, FastAPI and LangChain. Fought Docker through OpenRouter node compatibility issues and won.</p>
+          <div class="tile-tags"><span>n8n</span><span>FastAPI</span><span>LangChain</span></div>
+          <span class="tile-more">view project →</span>
+        </div>
+      </a>
+
+      <a class="tile" href="projects/cybersecurity-research.html">
+        <svg class="tile-blob" viewBox="0 0 200 200"><path fill="#7A2E22" d="M39.5,-51.6C51.5,-44.1,61.6,-32.3,66.1,-18.3C70.6,-4.3,69.5,12,62.6,25.3C55.7,38.6,43,48.9,29,55.6C15,62.3,-0.3,65.4,-15.5,62.5C-30.7,59.6,-45.8,50.7,-55.3,37.6C-64.8,24.5,-68.7,7.2,-65.8,-8.5C-62.9,-24.2,-53.2,-38.3,-40.6,-45.8C-28,-53.3,-14,-54.2,-0.2,-53.9C13.6,-53.6,27.5,-59.1,39.5,-51.6Z" transform="translate(100 100)"/></svg>
+        <div class="tile-content">
+          <div class="tile-index">02</div>
+          <div class="tile-title">Cybersecurity Research (in progress)</div>
+          <p class="tile-desc">Working with my research supervisor toward an IEEE Access submission. I retired my original GNN threat-detection framing after deciding it wasn't the right foundation, and I'm rebuilding the topic from scratch — targeting a submission timed to my grad-school applications.</p>
+          <div class="tile-tags"><span>XAI</span><span>Network Security</span><span>CICIDS2017</span></div>
+          <span class="tile-more">view project →</span>
+        </div>
+      </a>
+
+      <a class="tile" href="projects/rise-app.html">
+        <svg class="tile-blob" viewBox="0 0 200 200"><path fill="#E8A854" d="M45.5,-58.5C58.3,-49.9,67.6,-34.8,71.4,-18.4C75.1,-2.1,73.2,15.5,65.2,29.4C57.2,43.3,43,53.5,27.4,60.8C11.7,68.1,-5.5,72.5,-21.3,68.7C-37.1,64.9,-51.6,52.9,-60.6,37.7C-69.6,22.5,-73.1,4.1,-69.9,-12.7C-66.7,-29.5,-56.8,-44.7,-43.2,-53.4C-29.7,-62.1,-14.8,-64.3,1.6,-66.4C18.1,-68.5,32.7,-67.1,45.5,-58.5Z" transform="translate(100 100)"/></svg>
+        <div class="tile-content">
+          <div class="tile-index">03</div>
+          <div class="tile-title">Rise — Tazkiya &amp; Habits</div>
+          <p class="tile-desc">A team app for Islamic self-development. I'm the content/grounding lead — sourcing classical texts for RAG so the model never fabricates an answer.</p>
+          <div class="tile-tags"><span>RAG</span><span>Content Design</span></div>
+          <span class="tile-more">view project →</span>
+        </div>
+      </a>
+
+      <a class="tile" href="projects/life-dashboard.html">
+        <svg class="tile-blob" viewBox="0 0 200 200"><path fill="#C1502E" d="M39.5,-51.6C51.5,-44.1,61.6,-32.3,66.1,-18.3C70.6,-4.3,69.5,12,62.6,25.3C55.7,38.6,43,48.9,29,55.6C15,62.3,-0.3,65.4,-15.5,62.5C-30.7,59.6,-45.8,50.7,-55.3,37.6C-64.8,24.5,-68.7,7.2,-65.8,-8.5C-62.9,-24.2,-53.2,-38.3,-40.6,-45.8C-28,-53.3,-14,-54.2,-0.2,-53.9C13.6,-53.6,27.5,-59.1,39.5,-51.6Z" transform="translate(100 100)"/></svg>
+        <div class="tile-content">
+          <div class="tile-index">04</div>
+          <div class="tile-title">Life Dashboard</div>
+          <p class="tile-desc">A single-file HTML tool I built for myself, tracking five parallel life goals at once because no spreadsheet could hold the shape of it.</p>
+          <div class="tile-tags"><span>HTML/CSS/JS</span></div>
+          <span class="tile-more">view project →</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section id="leadership">
+    <div class="label"><span class="label-badge">03</span><span class="label-line">leadership</span></div>
+    <div class="lead-grid">
+      <div class="lead-card">
+        <div class="lead-role">Media Director</div>
+        <div class="lead-org">University Science Society</div>
+        <p class="lead-desc">Visual and content direction for the society's media presence.</p>
+      </div>
+      <div class="lead-card">
+        <div class="lead-role">Social Media Manager</div>
+        <div class="lead-org">WDC RWU &amp; SYP</div>
+        <p class="lead-desc">Owned social presence and content for two overlapping initiatives; helped run and document 13+ events including seminars, workshops, an anti-harassment campaign, and a self-defence workshop.</p>
+      </div>
+      <div class="lead-card">
+        <div class="lead-role">Deputy Director, Social Media</div>
+        <div class="lead-org">Media Club</div>
+        <p class="lead-desc">Second-in-command for the club's social media team.</p>
+      </div>
+      <div class="lead-card">
+        <div class="lead-role">CM Female Ambassador</div>
+        <div class="lead-org">"She Leads Punjab" — Women Development Dept., Punjab</div>
+        <p class="lead-desc">Ran seminars on women in AI/tech and study-abroad scholarships for women — around 50 students per session. Batch II ranked Top 5 province-wide out of 40 universities.</p>
+      </div>
+      <div class="lead-card">
+        <div class="lead-role">Student Council Member</div>
+        <div class="lead-org">Rawalpindi Women University</div>
+        <p class="lead-desc">Event operations, including discipline in-charge duties.</p>
+      </div>
+      <div class="lead-card">
+        <div class="lead-role">Selected Fellow</div>
+        <div class="lead-org">Aurat Tech Fellowship — Data &amp; AI</div>
+        <p class="lead-desc">Shortlisted and selected for a fellowship focused on women in data &amp; AI.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <div class="contact-title"><span class="scribble-under">say hi
+    <svg viewBox="0 0 260 20" preserveAspectRatio="none"><path d="M2,12 Q40,2 80,12 T160,10 T240,14" stroke="#C1502E" stroke-width="6" fill="none" stroke-linecap="round"/></svg>
+  </span></div>
+  <div class="contact-sub">let's build something real</div>
+  <div class="contact-links">
+    <a href="mailto:hello@example.com">email</a>
+    <a href="#" target="_blank">linkedin</a>
+    <a href="#" target="_blank">github</a>
+  </div>
+  <div class="foot-note">made by hand, 2026 ✦</div>
+</footer>
+
+</body>
+</html>
